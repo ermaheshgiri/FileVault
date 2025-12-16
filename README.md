@@ -1,140 +1,123 @@
-📁 FileVault – Secure File Sharing Application (MERN Stack)
+# 📁 FileVault – Secure File Sharing Application (MERN Stack)
 
-FileVault is a full-stack file sharing application inspired by Google Drive.
-It allows users to upload, manage, and securely share files with other users or via private links, while enforcing strong authentication and authorization.
+FileVault is a secure full-stack file sharing application inspired by Google Drive.  
+It allows authenticated users to upload, manage, and share files with other registered users or via private links, while enforcing strict authorization and security controls.
 
-🚀 Features
-✅ Core Features
+This project is built as part of a **Full Stack Developer assignment** using the **MERN stack**.
 
-User Registration & Login (JWT Authentication)
+---
 
-Upload files (PDF, Images, CSV, etc.)
+## 🚀 Features
 
-Bulk file upload support
+### ✅ Core Features
+- User Registration & Login (JWT Authentication)
+- Upload files (PDF, Images, CSV, etc.)
+- Bulk file uploads
+- Display uploaded files with metadata:
+  - File name
+  - File type
+  - File size
+  - Upload date
+- File sharing:
+  - Share with specific registered users
+  - Share via private link (authenticated users only)
+- “Files Shared With Me” dashboard
+- Logout & protected routes
 
-View uploaded files with metadata:
+### ⭐ Bonus Features Implemented
+- Link-based sharing with expiry
+- Role-based access (Owner / Viewer)
+- Modern, responsive SaaS-style UI
 
-File name
+---
 
-File type
+## 🛠️ Tech Stack
 
-File size
+### Frontend
+- React.js
+- React Router
+- Axios
+- Bootstrap + Custom CSS
 
-Upload date
+### Backend
+- Node.js
+- Express.js
+- MongoDB Atlas
+- Mongoose
+- Multer (file uploads)
+- JWT (authentication)
+- bcrypt (password hashing)
 
-Secure file sharing:
+---
 
-Share with specific registered users
+## 🔐 Security & Access Control
 
-Share via private link (authenticated access only)
+- JWT-based authentication
+- Protected backend routes
+- Only file owners can share files
+- Shared users can only access permitted files
+- Link-based access:
+  - Requires authentication
+  - Automatically expires
+- File type & size validation on upload
 
-“Files Shared With Me” section
+---
 
-Logout & protected routes
-
-⭐ Bonus Features
-
-Link-based sharing with expiry
-
-Role-based access control (Owner / Viewer)
-
-Responsive, modern SaaS-style UI
-
-🛠️ Tech Stack
-Frontend
-
-React.js
-
-React Router
-
-Axios
-
-Bootstrap + Custom CSS
-
-Backend
-
-Node.js
-
-Express.js
-
-MongoDB (Atlas)
-
-Mongoose
-
-Multer (file uploads)
-
-JWT (authentication)
-
-bcrypt (password hashing)
-
-🔐 Security & Access Control
-
-JWT-based authentication for all protected routes
-
-Only file owners can share files
-
-Shared users can only view/download permitted files
-
-Link-based access:
-
-Requires user authentication
-
-Automatically expires
-
-File type and size validation during upload
-
-📂 Project Structure
 FileVault/
 ├── backend/
-│   ├── controllers/
-│   ├── middleware/
-│   ├── models/
-│   ├── routes/
-│   ├── uploads/
-│   ├── server.js
-│   └── .env (not committed)
+│ ├── controllers/
+│ ├── middleware/
+│ ├── models/
+│ ├── routes/
+│ ├── uploads/
+│ ├── server.js
+│ └── .env (not committed)
 │
 ├── frontend/
-│   ├── src/
-│   │   ├── api/
-│   │   ├── components/
-│   │   ├── styles.css
-│   │   ├── App.js
-│   │   └── index.js
-│   └── package.json
+│ ├── src/
+│ │ ├── api/
+│ │ ├── components/
+│ │ ├── styles.css
+│ │ ├── App.js
+│ │ └── index.js
+│ └── package.json
 │
 └── README.md
 
-⚙️ Setup & Installation
-🔹 Prerequisites
 
-Node.js (v18+ recommended)
+---
 
-MongoDB Atlas account or local MongoDB
+## ⚙️ Installation & Setup
 
-Git
+### 🔹 Prerequisites
+- Node.js (v18+)
+- MongoDB Atlas account or local MongoDB
+- Git
 
-🔹 Backend Setup
+---
+
+## 🔹 Backend Setup
+
+```bash
 cd backend
 npm install
-
 Create .env file in backend/
 PORT=5000
 MONGO_URI=mongodb+srv://<username>:<password>@cluster0.mongodb.net/filevault
 JWT_SECRET=your_secret_key
 
 
-⚠️ MongoDB Atlas Notes:
+⚠️ MongoDB Atlas:
 
-Whitelist IP (0.0.0.0/0)
+Whitelist IP: 0.0.0.0/0
 
 URL-encode password if it contains special characters
 
-Run Backend
+Start Backend
 npm run dev
 
 
-Backend runs on:
+Backend runs at:
 
 http://localhost:5000
 
@@ -144,29 +127,31 @@ npm install
 npm start
 
 
-Frontend runs on:
+Frontend runs at:
 
 http://localhost:3000
 
-🧪 How to Use the Application
+🧪 How the Application Works
 
-Register at /register
+User registers & logs in
 
-Login using registered credentials
+JWT token stored in browser
 
-Upload files (single or multiple)
+User uploads one or more files
 
-Share files:
+Files appear in dashboard
 
-With specific users (via email)
+Owner can:
 
-Via private link
+Share files with users (email-based)
 
-View shared files under “Files Shared With Me”
+Generate private share link
 
-Logout to end session
+Shared users see files under Files Shared With Me
 
-🔌 API Endpoints (Overview)
+Unauthorized users are blocked
+
+🔌 API Endpoints
 Authentication
 POST /api/auth/register
 POST /api/auth/login
@@ -180,13 +165,51 @@ POST /api/files/share
 Sharing
 GET /api/share/:token
 
+🧩 Key Code Snippets
+🔐 JWT Authentication Middleware
+const jwt = require("jsonwebtoken");
+
+module.exports = (req, res, next) => {
+  const token = req.headers.authorization?.split(" ")[1];
+  if (!token) return res.status(401).json({ message: "Unauthorized" });
+
+  const decoded = jwt.verify(token, process.env.JWT_SECRET);
+  req.userId = decoded.id;
+  next();
+};
+
+📤 File Upload (Multer)
+const multer = require("multer");
+
+const storage = multer.diskStorage({
+  destination: "uploads/",
+  filename: (req, file, cb) =>
+    cb(null, Date.now() + "-" + file.originalname),
+});
+
+module.exports = multer({ storage });
+
+🔐 Protected Route (React)
+import { Navigate } from "react-router-dom";
+
+export default function ProtectedRoute({ children }) {
+  const token = localStorage.getItem("token");
+  return token ? children : <Navigate to="/" replace />;
+}
+
+📊 Dashboard Component (React)
+useEffect(() => {
+  API.get("/files").then(res => setFiles(res.data));
+  API.get("/files/shared").then(res => setSharedFiles(res.data));
+}, []);
+
 🎨 UI & Responsiveness
 
-Fully responsive (Desktop / Tablet / Mobile)
+Responsive layout for mobile, tablet & desktop
 
-Modern card-based dashboard layout
+Gradient-based authentication pages
 
-Gradient-based login and dashboard header
+Card-based dashboard UI
 
 Clean UX focused on usability
 
@@ -194,53 +217,35 @@ Clean UX focused on usability
 
 JWT used for stateless authentication
 
-MongoDB used for file metadata storage
+MongoDB stores metadata, files stored locally
 
-Local storage for files (extensible to AWS S3)
+Modular backend architecture
 
-Modular backend architecture (controllers, routes, middleware)
+Centralized Axios instance with interceptor
 
-Frontend protected routes using React Router
+Frontend protected routing
 
 🔮 Future Enhancements
 
-Cloud storage (AWS S3)
-
-File download tracking
-
-Audit logs
+AWS S3 / Cloudinary storage
 
 File versioning
 
-Dark mode support
+Audit logs
 
-Admin dashboard
+Download analytics
+
+Dark mode
+
+Admin panel
 
 🎤 Interview Explanation (Short)
 
-“FileVault is a MERN-based secure file sharing application that allows authenticated users to upload and share files with strict access control, either with specific users or via private links.”
+“FileVault is a MERN-based secure file sharing application that allows authenticated users to upload and share files with strict access control using JWT authentication and role-based permissions.”
 
 👨‍💻 Author
 
 Mahesh Giri
-Full Stack Developer (MERN Stack)
+Full Stack Developer (MERN)
+## 📂 Project Structure
 
-✅ Assignment Checklist
-
-✔ File upload (single & bulk)
-
-✔ File metadata display
-
-✔ User-based sharing
-
-✔ Link-based sharing (authenticated)
-
-✔ Authorization & security checks
-
-✔ Bonus feature implemented
-
-✔ Responsive UI
-
-🎉 Final Note
-
-This project was developed with a focus on real-world application design, security, and clean user experience, closely matching the assignment requirements.
