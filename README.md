@@ -1,4 +1,4 @@
-# File Sharing Application
+# FileVault - File Sharing Application
 
 A full-stack MERN (MongoDB, Express, React, Node.js) application that enables secure file uploading, management, and sharing with authentication and authorization features.
 
@@ -75,8 +75,8 @@ Before you begin, ensure you have the following installed:
 ### 1. Clone the Repository
 
 ```bash
-git clone <repository-url>
-cd Nua
+git clone https://github.com/ermaheshgiri/FileVault.git
+cd FileVault
 ```
 
 ### 2. Install Backend Dependencies
@@ -123,8 +123,25 @@ NODE_ENV=development
 
 ⚠️ **Important Security Notes:**
 - Never commit the `.env` file to version control
+- Add `uploads/` to `.gitignore` to prevent uploading user files to the repository
 - Use strong, unique values for `JWT_SECRET`
 - For production, use environment-specific values
+
+### Creating .gitignore File
+
+Ensure your `Backend/.gitignore` includes:
+
+```
+# dependencies
+/node_modules
+
+# uploads
+/uploads
+
+# misc
+.DS_Store
+.env
+```
 
 ### Frontend Configuration (Optional)
 
@@ -164,16 +181,19 @@ The React app will start on `http://localhost:3000`
 You can install `concurrently` to run both servers with a single command:
 
 ```bash
-# In the root directory
+# In the root directory (FileVault/)
+npm init -y
 npm install concurrently --save-dev
 ```
 
-Add this script to a root `package.json`:
+Add this script to the root `package.json`:
 
 ```json
 {
   "scripts": {
-    "dev": "concurrently \"cd Backend && npm run dev\" \"cd frontend && npm start\""
+    "dev": "concurrently \"cd Backend && npm run dev\" \"cd frontend && npm start\"",
+    "start:backend": "cd Backend && npm start",
+    "start:frontend": "cd frontend && npm start"
   }
 }
 ```
@@ -186,7 +206,7 @@ npm run dev
 ## 📁 Project Structure
 
 ```
-Nua/
+FileVault/
 ├── Backend/
 │   ├── config/
 │   │   └── db.js                 # MongoDB connection configuration
@@ -404,7 +424,7 @@ This project is licensed under the ISC License.
 
 ## 👥 Authors
 
-- Mahesh Giri - 
+- **Mahesh Giri** - [GitHub](https://github.com/ermaheshgiri)
 
 ## 🙏 Acknowledgments
 
