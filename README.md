@@ -149,6 +149,29 @@ If your backend runs on a different port or domain, update the API base URL in `
 
 ## 🏃 Running the Application
 
+### Quick Start (Run Locally)
+
+Follow these commands in two terminals:
+
+```bash
+# Terminal 1: start backend
+cd Backend
+npm install
+npm run dev
+# Backend runs at http://localhost:5000
+
+# Terminal 2: start frontend
+cd frontend
+npm install
+npm start
+# Frontend runs at http://localhost:3000
+```
+
+Notes:
+- Create `Backend/.env` with `MONGO_URI`, `JWT_SECRET`, and `PORT=5000`.
+- Ensure MongoDB is running locally or use an Atlas URI.
+- If ports are busy, adjust `PORT` in `.env`; React will offer an alternate port.
+
 ### Option 1: Run Backend and Frontend Separately
 
 #### Start the Backend Server
